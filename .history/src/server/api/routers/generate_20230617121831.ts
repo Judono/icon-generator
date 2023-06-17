@@ -12,7 +12,7 @@ const s3 = new AWS.S3({
     accessKeyId: env.ACCESS_KEY_ID,
     secretAccessKey: env.SECRET_ACCESS_KEY,
   },
-  region: "ap-southeast-3",
+  region: "us-east-1",
 });
 
 const BUCKET_NAME = "icon-generator-webapp";
@@ -29,7 +29,7 @@ async function generateIcon(prompt: string, numberOfIcons = 1) {
     const response = await openai.createImage({
       prompt,
       n: numberOfIcons,
-      size: "1024x1024",
+      size: "512x512",
       response_format: "b64_json",
     });
     return response.data.data.map((result) => result.b64_json || "");
@@ -99,7 +99,7 @@ export const generateRouter = createTRPCRouter({
 
       return createdIcons.map((icon) => {
         return {
-          imageUrl: `https://${BUCKET_NAME}.s3.ap-southeast-3.amazonaws.com/${icon.id}`,
+          imageUrl: `https://${BUCKET_NAME}.s3.amazonaws.com/${icon.id}`,
         };
       });
     }),
